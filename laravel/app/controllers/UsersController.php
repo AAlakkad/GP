@@ -7,7 +7,7 @@
  *
  * Implements actions regarding user management
  */
-class UsersController extends Controller
+class UsersController extends BaseController
 {
 
     /**
@@ -17,7 +17,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return View::make(Config::get('confide::signup_form'));
+        $this->layout->content = View::make(Config::get('confide::signup_form'));
     }
 
     /**
