@@ -1,0 +1,1 @@
+/home/ammar/www/graduation-project/laravel/app/views/recipes/index.blade.php
