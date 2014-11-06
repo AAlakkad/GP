@@ -7,6 +7,7 @@ Route::get('/', function()
 
 Route::resource('ingredients', 'IngredientsController');
 Route::resource('recipes', 'RecipesController');
+Route::resource('metas', 'MetasController');
 
 // Confide routes
 Route::get('users/create', 'UsersController@create');
