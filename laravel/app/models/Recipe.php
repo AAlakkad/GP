@@ -16,4 +16,14 @@ class Recipe extends \Eloquent {
     {
         return $this->belongsToMany('Ingredient')
     }
+
+    public function metas()
+    {
+        return $this->belongsToMany('Meta');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('User');
+    }
 }

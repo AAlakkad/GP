@@ -6,4 +6,9 @@ use Zizaco\Confide\ConfideUserInterface;
 class User extends Eloquent implements ConfideUserInterface
 {
     use ConfideUser;
+
+    public function recipes()
+    {
+        return $this->hasMany('Recipe');
+    }
 }
