@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Title here</title>
+    <title>{{ Config::get('app.title') }}</title>
 
     <meta charset="utf-8">
     <meta name="author" content="Ammar Alakkad">
