@@ -9,9 +9,9 @@ class IngredientsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$ingredients = Ingredient::all();
+		$ingredients = Ingredient::paginate(Config::get('app.items_per_page', 10));
 
-		return View::make('ingredients.index', compact('ingredients'));
+		$this->layout->content = View::make('ingredients.index', compact('ingredients'));
 	}
 
 	/**
@@ -21,7 +21,7 @@ class IngredientsController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('ingredients.create');
+		$this->layout->content = View::make('ingredients.create');
 	}
 
 	/**
@@ -53,7 +53,7 @@ class IngredientsController extends \BaseController {
 	{
 		$ingredient = Ingredient::findOrFail($id);
 
-		return View::make('ingredients.show', compact('ingredient'));
+		$this->layout->content = View::make('ingredients.show', compact('ingredient'));
 	}
 
 	/**
@@ -66,7 +66,7 @@ class IngredientsController extends \BaseController {
 	{
 		$ingredient = Ingredient::find($id);
 
-		return View::make('ingredients.edit', compact('ingredient'));
+		$this->layout->content = View::make('ingredients.create', compact('ingredient'));
 	}
 
 	/**
