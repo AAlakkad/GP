@@ -14,7 +14,7 @@ class Recipe extends \Eloquent {
 
     public function ingredients()
     {
-        return $this->belongsToMany('Ingredient')
+        return $this->belongsToMany('Ingredient');
     }
 
     public function metas()
