@@ -1,1 +1,5 @@
-/home/ammar/www/graduation-project/laravel/app/views/ingredients/show.blade.php
+@include('ingredients.header')
+
+<h2>{{ $ingredient->name }}</h2>
+
+<p>{{ $ingredient->description }}</p>
