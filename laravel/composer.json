@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"zizaco/confide": "~4.0@dev"
+		"zizaco/confide": "~4.0@dev",
+		"adamwathan/bootforms": "~0.4"
 	},
 	"require-dev": {
 	    "way/generators": "~2.0"
