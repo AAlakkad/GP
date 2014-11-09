@@ -9,13 +9,15 @@
 
     {{ Form::token() }}
 
-    {{ BootForm::text('Name', 'name'); }}
-    {{ BootForm::textarea('Description', 'description'); }}
-    {{ BootForm::textarea('Steps', 'steps'); }}
+    {{ BootForm::text('Name', 'name') }}
+    {{ BootForm::textarea('Description', 'description') }}
+    {{ BootForm::textarea('Steps', 'steps') }}
 
-    {{ BootForm::submit('Submit'); }}
+    {{ list_to_checklist($ingredients, 'ingredient', isset($recipe) ? $recipe->ingredients->lists('id') : null) }}
+
+
+    {{ BootForm::submit('Submit') }}
 
 {{ BootForm::close() }}
 
 
-{{ var_dump($ingredients) }}
