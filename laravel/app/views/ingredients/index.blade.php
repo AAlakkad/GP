@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th>Ingredient</th>
+            <th width="10%">Unit</th>
             <th width="1">Edit</th>
         </tr>
     </thead>
@@ -12,6 +13,7 @@
         @foreach ($ingredients as $ingredient)
         <tr>
             <td>{{ link_to_route('ingredients.show', $ingredient->name, $ingredient->id) }}</td>
+            <td>{{ $ingredient->unit }}</td>
             <td>{{ link_to_route('ingredients.edit', 'Edit', $ingredient->id) }}</td>
         </tr>
         @endforeach

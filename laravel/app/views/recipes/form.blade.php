@@ -1,5 +1,7 @@
 @include('recipes.header')
 
+{{-- dd(array_fetch($recipe->ingredients->toArray(), 'name')) --}}
+
 @if (! isset($recipe))
     {{ BootForm::open()->post()->action(URL::route('recipes.store')) }}
 @else
@@ -13,7 +15,7 @@
     {{ BootForm::textarea('Description', 'description') }}
     {{ BootForm::textarea('Steps', 'steps') }}
 
-    {{ list_to_checklist($ingredients, 'ingredient', isset($recipe) ? $recipe->ingredients->lists('id') : null) }}
+    {{ list_to_ingredients($ingredients, 'ingredient', isset($recipe) ? $recipe->ingredients->lists('unit', 'id') : null) }}
 
 
     {{ BootForm::submit('Submit') }}
