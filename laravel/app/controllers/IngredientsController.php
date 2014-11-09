@@ -21,7 +21,7 @@ class IngredientsController extends \BaseController {
 	 */
 	public function create()
 	{
-		$this->layout->content = View::make('ingredients.create');
+		$this->layout->content = View::make('ingredients.form');
 	}
 
 	/**
@@ -66,7 +66,7 @@ class IngredientsController extends \BaseController {
 	{
 		$ingredient = Ingredient::find($id);
 
-		$this->layout->content = View::make('ingredients.create', compact('ingredient'));
+		$this->layout->content = View::make('ingredients.form', compact('ingredient'));
 	}
 
 	/**
