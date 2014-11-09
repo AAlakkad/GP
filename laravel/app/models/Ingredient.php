@@ -8,7 +8,7 @@ class Ingredient extends \Eloquent {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = ['name', 'description'];
+	protected $fillable = ['name', 'unit', 'description'];
 
     public function recipes()
     {
