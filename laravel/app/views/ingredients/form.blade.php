@@ -9,9 +9,10 @@
 
     {{ Form::token() }}
 
-    {{ BootForm::text('Name', 'name'); }}
-    {{ BootForm::textarea('Description', 'description'); }}
+    {{ BootForm::text('Name', 'name') }}
+    {{ BootForm::text('Unit', 'unit') }}
+    {{ BootForm::textarea('Description', 'description') }}
 
-    {{ BootForm::submit('Submit'); }}
+    {{ BootForm::submit('Submit') }}
 
 {{ BootForm::close() }}
