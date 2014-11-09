@@ -15,4 +15,9 @@ class Ingredient extends \Eloquent {
         return $this->belongsToMany('Recipe');
     }
 
+    static public function getList()
+    {
+        return static::lists('name', 'id');
+    }
+
 }
