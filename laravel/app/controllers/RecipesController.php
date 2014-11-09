@@ -11,7 +11,7 @@ class RecipesController extends \BaseController {
 	{
 		$recipes = Recipe::all();
 
-		return View::make('recipes.index', compact('recipes'));
+		$this->layout->content = View::make('recipes.index', compact('recipes'));
 	}
 
 	/**
@@ -21,7 +21,9 @@ class RecipesController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('recipes.create');
+		$ingredients = Ingredient::getList();
+
+		$this->layout->content = View::make('recipes.form', compact('ingredients'));
 	}
 
 	/**
@@ -53,7 +55,7 @@ class RecipesController extends \BaseController {
 	{
 		$recipe = Recipe::findOrFail($id);
 
-		return View::make('recipes.show', compact('recipe'));
+		$this->layout->content = View::make('recipes.show', compact('recipe'));
 	}
 
 	/**
@@ -66,7 +68,7 @@ class RecipesController extends \BaseController {
 	{
 		$recipe = Recipe::find($id);
 
-		return View::make('recipes.edit', compact('recipe'));
+		$this->layout->content = View::make('recipes.form', compact('recipe'));
 	}
 
 	/**
