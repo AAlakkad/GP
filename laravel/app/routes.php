@@ -2,7 +2,7 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('layout.master', ['content' => 'Hello!']);
 });
 
 Route::resource('ingredients', 'IngredientsController');
