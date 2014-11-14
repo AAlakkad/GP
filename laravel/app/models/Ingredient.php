@@ -12,7 +12,7 @@ class Ingredient extends \Eloquent {
 
     public function recipes()
     {
-        return $this->belongsToMany('Recipe');
+        return $this->belongsToMany('Recipe')->withTimestamps()->withPivot('amount');
     }
 
     static public function getList()
