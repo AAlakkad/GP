@@ -5,6 +5,8 @@ Route::get('/', function()
 	return View::make('layout.master', ['content' => 'Hello!']);
 });
 
+Route::get('/search', ['as' => 'search.index', 'uses' => 'SearchController@index']);
+
 Route::resource('ingredients', 'IngredientsController');
 Route::resource('recipes', 'RecipesController');
 Route::resource('metas', 'MetasController');
