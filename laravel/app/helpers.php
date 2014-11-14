@@ -48,6 +48,7 @@ function list_to_ingredients( $list, $name, $recipe = null )
                 $amount = (int) $recipe->ingredients()->find($key)->amount;
             }
         }
+        $unit = Ingredient::find($key)->unit;
 
         ?>
         <div class="row">
@@ -62,7 +63,7 @@ function list_to_ingredients( $list, $name, $recipe = null )
                 <input type="number" class="form-control" name="<?= $name ?>[<?= $key?>][amount]" value="<?= $amount?>"/>
             </div>
             <div class="col-md-2">
-                <span>Unit</span>
+                <span><?= $unit ?></span>
             </div>
         </div>
         </div>
