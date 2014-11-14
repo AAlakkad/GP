@@ -107,7 +107,7 @@ class RecipesController extends \BaseController
                 if (isset( $ingredient['amount'] )) {
                     $attributes['amount'] = (int) $ingredient['amount'];
                 }
-                $recipe->ingredients()->attach( $ingredient->id, $attributes );
+                $recipe->ingredients()->attach( $ingredient['id'], $attributes );
             }
         }
 

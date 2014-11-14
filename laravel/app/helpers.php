@@ -33,26 +33,33 @@ function list_to_checklist( $list, $name, $values = null )
     }
 }
 
-function list_to_ingredients( $list, $name, $selectedValues = null )
+function list_to_ingredients( $list, $name, $recipe = null )
 {
+    if($recipe) {
+        $selectedValues = $recipe->ingredients->lists('unit', 'id');
+    }
     foreach ($list as $key => $label) {
         $checked = '';
-        if (is_array( $selectedValues ) and in_array( $key, $selectedValues )) {
-            $checked = ' checked';
-        } elseif ($key == $selectedValues) {
-            $checked = ' checked';
+        $amount = 0;
+
+        if (is_array( $selectedValues ) ) {
+            if(array_key_exists($key, $selectedValues)) {
+                $checked = ' checked';
+                $amount = (int) $recipe->ingredients()->find($key)->amount;
+            }
         }
+
         ?>
         <div class="row">
         <div class="checkbox">
             <div class="col-md-3">
                 <label for="item_<?= $key ?>">
-                    <input type="checkbox" id="item_<?= $key ?>" name="<?= $name ?>[<?=$key?>]['id']" value="<?= $key ?>" <?= $checked ?>>
+                    <input type="checkbox" id="item_<?= $key ?>" name="<?= $name ?>[<?= $key?>][id]" value="<?= $key ?>" <?= $checked ?>>
                     <?= $label ?>
                 </label>
             </div>
             <div class="col-md-2">
-                <input type="number" class="form-control" name=<?= $name ?>[<?=$key?>]['amount']"/>
+                <input type="number" class="form-control" name="<?= $name ?>[<?= $key?>][amount]" value="<?= $amount?>"/>
             </div>
             <div class="col-md-2">
                 <span>Unit</span>
