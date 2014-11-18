@@ -1,7 +1,18 @@
 <?php
 
+use AAlakkad\RecipesFinder\Repositories\Ingredient\IngredientRepository;
+use AAlakkad\RecipesFinder\Repositories\Recipe\RecipeRepository;
+
 class RecipesController extends \BaseController
 {
+    private $recipe;
+    private $ingredient;
+
+    public function __construct( RecipeRepository $recipeRepository, IngredientRepository $ingredientRepository )
+    {
+        $this->recipe     = $recipeRepository;
+        $this->ingredient = $ingredientRepository;
+    }
 
     /**
      * Display a listing of recipes
@@ -10,7 +21,7 @@ class RecipesController extends \BaseController
      */
     public function index()
     {
-        $recipes = Recipe::paginate( Config::get( 'app.items_per_page', 10 ) );
+        $recipes = $this->recipe->paginate();
 
         $this->layout->content = View::make( 'recipes.index', compact( 'recipes' ) );
     }
@@ -22,7 +33,7 @@ class RecipesController extends \BaseController
      */
     public function create()
     {
-        $ingredients = Ingredient::getList();
+        $ingredients = $this->ingredient->getList();
 
         $this->layout->content = View::make( 'recipes.form', compact( 'ingredients' ) );
     }
@@ -34,18 +45,13 @@ class RecipesController extends \BaseController
      */
     public function store()
     {
-        $validator = Validator::make( $data = Input::all(), Recipe::$rules );
-
-        if ($validator->fails()) {
-            return Redirect::back()->withErrors( $validator )->withInput();
+        if (!$validator = $this->recipe->validate( Input::all() )) {
+            return $this->redirectErrors($validator);
         }
 
-        $ingredients = [ ];
-        foreach (Input::get( 'ingredient' ) as $ingredient) {
-            $ingredients [] = Ingredient::find( $ingredient );
-        }
+        $ingredients = $this->ingredient->getMultipleById( Input::get( 'ingredient' ) );
 
-        Recipe::create( $data )->ingredients()->saveMany( $ingredients );
+        $this->recipe->saveWithIngredients( Input::all(), $ingredients );
 
         return Redirect::route( 'recipes.index' );
     }
@@ -59,7 +65,7 @@ class RecipesController extends \BaseController
      */
     public function show( $id )
     {
-        $recipe = Recipe::findOrFail( $id );
+        $recipe = $this->recipe->getById( $id );
 
         $this->layout->content = View::make( 'recipes.show', compact( 'recipe' ) );
     }
@@ -73,8 +79,8 @@ class RecipesController extends \BaseController
      */
     public function edit( $id )
     {
-        $recipe      = Recipe::with( 'ingredients' )->find( $id );
-        $ingredients = Ingredient::getList();
+        $recipe      = $this->recipe->getById( $id );
+        $ingredients = $this->ingredient->getList();
 
         $this->layout->content = View::make( 'recipes.form', compact( 'recipe', 'ingredients' ) );
     }
@@ -88,30 +94,14 @@ class RecipesController extends \BaseController
      */
     public function update( $id )
     {
-        $recipe = Recipe::findOrFail( $id );
+        $recipe = $this->recipe->getById( $id );
 
-        $validator = Validator::make( $data = Input::all(), Recipe::$rules );
-
-        if ($validator->fails()) {
-            return Redirect::back()->withErrors( $validator )->withInput();
+        if (!$validator = $this->recipe->validate( Input::all() )) {
+            return $this->redirectErrors($validator);
         }
 
-        $recipe->update( $data );
-        // detach all related ingredients
-        $recipe->ingredients()->detach();
-
-        // attach the selected ingredients only
-        foreach (Input::get( 'ingredient' ) as $ingredient) {
-            if (isset( $ingredient['id'] )) {
-                $attributes = [ ];
-                if (isset( $ingredient['amount'] )) {
-                    $attributes['amount'] = (int) $ingredient['amount'];
-                }
-                $recipe->ingredients()->attach( $ingredient['id'], $attributes );
-            }
-        }
-
-        $recipe->save();
+        $recipe->update( Input::all() );
+        $this->recipe->attachIngredients( $id, Input::get( 'ingredient' ) );
 
         return Redirect::route( 'recipes.index' );
     }
@@ -125,7 +115,7 @@ class RecipesController extends \BaseController
      */
     public function destroy( $id )
     {
-        Recipe::destroy( $id );
+        $this->recipe->destroy( $id );
 
         return Redirect::route( 'recipes.index' );
     }

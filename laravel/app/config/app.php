@@ -126,6 +126,7 @@ return array(
 		'Zizaco\Confide\ServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
 		'AdamWathan\BootForms\BootFormsServiceProvider',
+		'AAlakkad\RecipesFinder\RecipesServiceProvider',
 	),
 
 	/*

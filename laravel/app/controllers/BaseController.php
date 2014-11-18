@@ -15,6 +15,10 @@ class BaseController extends Controller {
 		{
 			$this->layout = View::make($this->layout);
 		}
-	}
+    }
 
+    public function redirectErrors($validator)
+    {
+        return Redirect::back()->withErrors( $validator )->withInput();       
+    }
 }

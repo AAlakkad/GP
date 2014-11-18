@@ -1,107 +1,113 @@
 <?php
+use AAlakkad\RecipesFinder\Repositories\Ingredient\IngredientRepository;
 
-class IngredientsController extends \BaseController {
+class IngredientsController extends \BaseController
+{
+    private $ingredient;
 
-	/**
-	 * Display a listing of ingredients
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$ingredients = Ingredient::paginate(Config::get('app.items_per_page', 10));
+    public function __construct( IngredientRepository $ingredientRepository )
+    {
+        $this->ingredient = $ingredientRepository;
+    }
 
-		$this->layout->content = View::make('ingredients.index', compact('ingredients'));
-	}
+    /**
+     * Display a listing of ingredients
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $ingredients = $this->ingredient->paginate();
 
-	/**
-	 * Show the form for creating a new ingredient
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		$this->layout->content = View::make('ingredients.form');
-	}
+        $this->layout->content = View::make( 'ingredients.index', compact( 'ingredients' ) );
+    }
 
-	/**
-	 * Store a newly created ingredient in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = Input::all(), Ingredient::$rules);
+    /**
+     * Show the form for creating a new ingredient
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $this->layout->content = View::make( 'ingredients.form' );
+    }
 
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
+    /**
+     * Store a newly created ingredient in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        if (!$validator = $this->ingredient->validate( Input::all() )) {
+            return $this->redirectErrors($validator);
+        }
 
-		Ingredient::create($data);
+        $this->ingredient->create( Input::all() );
 
-		return Redirect::route('ingredients.index');
-	}
+        return Redirect::route( 'ingredients.index' );
+    }
 
-	/**
-	 * Display the specified ingredient.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$ingredient = Ingredient::findOrFail($id);
+    /**
+     * Display the specified ingredient.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function show( $id )
+    {
+        $ingredient = $this->ingredient->getById( $id );
 
-		$this->layout->content = View::make('ingredients.show', compact('ingredient'));
-	}
+        $this->layout->content = View::make( 'ingredients.show', compact( 'ingredient' ) );
+    }
 
-	/**
-	 * Show the form for editing the specified ingredient.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$ingredient = Ingredient::find($id);
+    /**
+     * Show the form for editing the specified ingredient.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function edit( $id )
+    {
+        $ingredient = $this->ingredient->getById( $id );
 
-		$this->layout->content = View::make('ingredients.form', compact('ingredient'));
-	}
+        $this->layout->content = View::make( 'ingredients.form', compact( 'ingredient' ) );
+    }
 
-	/**
-	 * Update the specified ingredient in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$ingredient = Ingredient::findOrFail($id);
+    /**
+     * Update the specified ingredient in storage.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function update( $id )
+    {
+        $ingredient = $this->ingredient->getById( $id );
+        
+        if (!$validator = $this->ingredient->validate( Input::all() )) {
+            return $this->redirectErrors($validator);
+        }
 
-		$validator = Validator::make($data = Input::all(), Ingredient::$rules);
+        $ingredient->update( Input::all() );
 
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
+        return Redirect::route( 'ingredients.index' );
+    }
 
-		$ingredient->update($data);
+    /**
+     * Remove the specified ingredient from storage.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function destroy( $id )
+    {
+        $this->ingredient->destroy( $id );
 
-		return Redirect::route('ingredients.index');
-	}
-
-	/**
-	 * Remove the specified ingredient from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		Ingredient::destroy($id);
-
-		return Redirect::route('ingredients.index');
-	}
+        return Redirect::route( 'ingredients.index' );
+    }
 
 }
