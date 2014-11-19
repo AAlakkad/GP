@@ -63,7 +63,7 @@ class UsersController extends BaseController
         if (Confide::user()) {
             return Redirect::to( '/' );
         } else {
-            return View::make( Config::get( 'confide::login_form' ) );
+            $this->layout->content = View::make( Config::get( 'confide::login_form' ) );
         }
     }
 

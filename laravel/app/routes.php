@@ -4,13 +4,14 @@ Route::get( '/', function () {
     return View::make( 'layout.master', [ 'content' => 'Hello!' ] );
 } );
 
-Route::get( '/search', [ 'as' => 'search.index', 'uses' => 'SearchController@index' ] );
-Route::get( '/search-ingredients/{id?}', ['as' => 'search.ingredients', 'uses' => 'SearchController@indexIngredients']);
+Route::get( '/search/{ids?}', [ 'as' => 'search.index', 'uses' => 'SearchController@index' ] );
 Route::post( '/search', [ 'as' => 'search.post', 'uses' => 'SearchController@doSearch' ] );
 
-Route::resource( 'ingredients', 'IngredientsController' );
-Route::resource( 'recipes', 'RecipesController' );
-Route::resource( 'metas', 'MetasController' );
+Route::group(['before' => 'auth'], function() {
+    Route::resource( 'ingredients', 'IngredientsController' );
+    Route::resource( 'recipes', 'RecipesController' );
+    Route::resource( 'metas', 'MetasController' );
+});
 
 // Confide routes
 Route::get( 'users/create', 'UsersController@create' );

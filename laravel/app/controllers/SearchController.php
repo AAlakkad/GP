@@ -18,12 +18,35 @@ class SearchController extends \BaseController
      *
      * @return Response
      */
-    public function index()
+    public function index($id = null)
     {
+        $selected = $this->getIngredients($id);
+        if(count($selected)) {
+            // get search results
+            $results = $this->recipe->getByIngredients($selected);
+            $suggestions = $this->recipe->getSuggestionsByIngredients($selected);
+        }
         // get ingredients which is related to recipes
         $ingredients = Ingredient::has( 'recipes' )->get();
         // load view
-        $this->layout->content = View::make( 'search.index', compact( 'ingredients' ) );
+        $this->layout->content = View::make( 'search.index', compact( 'ingredients', 'selected', 'results', 'suggestions' ) );
+    }
+
+    private function getIngredients($id = null)
+    {
+        $ingredientsIds = [];
+        if($id) {
+            $ingredients = explode(',', $id);
+            if(is_array($ingredients)) {
+                // explicit cast array elements to int, and remove everything else
+                foreach ($ingredients as $id) {
+                    if($id = (int) $id) {
+                        array_push($ingredientsIds, $id);
+                    }
+                }
+            }
+        }
+        return $ingredientsIds;
     }
 
     /**
@@ -45,7 +68,6 @@ class SearchController extends \BaseController
                 }
             }
         }
-        dd($ingredientsIds);
         $this->layout->content = View::make( 'search.index' );
     }
     
