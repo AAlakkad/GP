@@ -1,6 +1,7 @@
 <?php namespace AAlakkad\RecipesFinder\Repositories\Recipe;
 
 use AAlakkad\RecipesFinder\Repositories\BaseRepository;
+use \DB;
 
 class DbRecipeRepository extends BaseRepository implements RecipeRepository
 {
@@ -60,8 +61,25 @@ class DbRecipeRepository extends BaseRepository implements RecipeRepository
         return $recipe->save();
     }
 
-    function getRecipesByIngredients( $ingredients = [ ] )
+    public function getByIngredients( $ingredients = [ ] )
     {
+        $recipesIds = DB::table('ingredient_recipe')->whereIn('ingredient_id', $ingredients)->groupBy('recipe_id')->get();
 
+        $recipes = $this->model->whereHas('ingredients', function($q) use ($ingredients) {
+            // $q->whereIn('ingredient_id', $ingredients);
+            $q->where(DB::raw('1'), '=', DB::raw('1'));
+            foreach($ingredients as $ingredient) {
+                $q->Orwhere('ingredient_id', '=', $ingredient);
+            }
+        })->groupBy('id')->get();
+        return $recipes;
+    }
+
+    function getSuggestionsByIngredients( $ingredients = [ ] )
+    {
+        $recipes = $this->model->whereHas('ingredients', function($q) use ($ingredients) {
+            $q->whereIn('ingredient_id', $ingredients);
+        })->groupBy('id')->get();
+        return $recipes;
     }
 }
