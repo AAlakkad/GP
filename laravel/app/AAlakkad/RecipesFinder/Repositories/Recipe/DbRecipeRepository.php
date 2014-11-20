@@ -42,18 +42,29 @@ class DbRecipeRepository extends BaseRepository implements RecipeRepository
 
     function attachIngredients( $id, $ingredients = [ ] )
     {
-        $recipe = $this->getById( $id );
+        $recipe = is_numeric($id) ? $this->getById( $id ) : $id;
 
         // detach all related ingredients
         $recipe->ingredients()->detach();
 
         // attach the selected ingredients only
         foreach ($ingredients as $ingredient) {
+            $attributes = [ ];
+            $ingredient_id = null;
             if (isset( $ingredient['id'] )) {
-                $attributes = [ ];
+                $ingredient_id = $ingredient['id'];
                 if (isset( $ingredient['amount'] )) {
                     $attributes['amount'] = (int) $ingredient['amount'];
                 }
+            }
+            elseif(isset($ingredient->id)) {
+                $ingredient_id = $ingredient->id;
+                if (isset( $ingredient['amount'] )) {
+                    $attributes['amount'] = (int) $ingredient['amount'];
+                }
+            }
+
+            if($ingredient_id) {
                 $recipe->ingredients()->attach( $ingredient['id'], $attributes );
             }
         }
@@ -82,4 +93,15 @@ class DbRecipeRepository extends BaseRepository implements RecipeRepository
         })->groupBy('id')->get();
         return $recipes;
     }
+
+    /**
+     * Create new recipe
+     *
+     * @return object
+     */
+    public function create($input)
+    {
+        return $this->model->create($input);
+    }
+    
 }

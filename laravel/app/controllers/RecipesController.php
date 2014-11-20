@@ -51,7 +51,10 @@ class RecipesController extends \BaseController
 
         $ingredients = $this->ingredient->getMultipleById( Input::get( 'ingredient' ) );
 
-        $this->recipe->saveWithIngredients( Input::all(), $ingredients );
+        $recipe = $this->recipe->create(Input::all());
+        $this->recipe->attachIngredients($recipe, $ingredients);
+
+        //$this->recipe->saveWithIngredients( Input::all(), $ingredients );
 
         return Redirect::route( 'recipes.index' );
     }

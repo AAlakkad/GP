@@ -6,4 +6,5 @@ interface RecipeRepository {
     function validate($data);
     function attachIngredients($id, $ingredients = []);
     function saveWithIngredients($data, $ingredients = []);
+    function create($input);
 }

@@ -36,4 +36,15 @@ class DbIngredientRepository extends BaseRepository implements IngredientReposit
         }
         return $ingredients;
     }
+
+    /**
+     * Create ingredient
+     *
+     * @return void
+     */
+    public function create($input)
+    {
+        return $this->model->create($input);
+    }
+    
 }
